@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <link href="../static/css/style.css" rel="stylesheet" type="text/css" media="all">
+        <link
+            rel="stylesheet"
+            href="{{url_for('static',filename='css/style.css')}}"
+    />
+    <link href="../static/css/error.css" rel="stylesheet" type="text/css" media="all">
+    <link
+            rel="stylesheet"
+            href="{{url_for('static',filename='css/error.css')}}"
+    />
+    <title>{{http_msg}}</title>
+
+</head>
+<body>
+    <div>
+        <p class="emoticon">:-(</p>
+        <p class="http_code">{{http_code}} Error</p>
+        <p class="http_msg">{{http_msg}}</p>
+    </div>
+    <p class="error_msg">
+        {% for i in error_list %}
+        {{ i }}<br>
+        {% endfor %}
+        エラーコード：{{error_code}}
+    </p>
+</body>
+</html>

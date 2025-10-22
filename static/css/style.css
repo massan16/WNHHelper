@@ -1,0 +1,50 @@
+* {
+    background: #29ccbc;
+    color: white;
+}
+body {
+    font-size: 1.5rem;
+    text-align: center;
+}
+
+.msg_box {
+    margin:0 auto;
+    width: 100%;
+}
+
+.msg_box ul{
+    margin:0 auto;
+    text-align: left; 
+    width: fit-content;
+}
+
+table {
+    border-collapse: collapse;
+    border: solid #CCC;
+    border-width: 1px;
+    color: #444;
+    margin:0 auto;
+    margin-top:25px;
+    max-width: 700px;
+    width: 60%;
+}
+
+table tr th,
+table tr td {
+    border: solid #CCC;
+    border-width: 1px;
+    padding: 0.5em;
+    text-align: left;
+    vertical-align: middle;
+}
+
+table tr th {
+    background: gray;
+    line-height: 200%;
+    width: 35%;
+}
+
+.title {
+    font-size: 3rem;
+}
+

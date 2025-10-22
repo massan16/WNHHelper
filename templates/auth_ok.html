@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <link href="../static/css/style.css" rel="stylesheet" type="text/css" media="all">
+    <link
+            rel="stylesheet"
+            href="{{url_for('static',filename='css/style.css')}}"
+    />
+    <title>認証が完了しました</title>
+
+</head>
+<body>
+    <div class="msg_box">
+        <p class="title">認証が完了しました</p>
+        <p>以下のWargamingアカウントで認証が完了しました。<br>
+            次のいずれかに該当する場合は速やか運営チームまでご連絡ください。
+        </p>
+        <ul>
+            <li>Wargamingアカウントを間違えた</li>
+            <li>サーバーで見えるチャンネルが増えていない</li>
+
+        </ul>       
+    <table>
+        <tr>
+            <th>サーバー</th>
+            <td>{{region}}</td>
+        </tr>
+        <tr>
+            <th>IGN</th>
+            <td>{{nickname}}</td>
+        </tr>
+
+    </table>
+</body>
+</html>

@@ -1,0 +1,15 @@
+.emoticon{
+    color: #66fff2;
+    font-size: 20rem;
+    text-align: center;
+    margin: 0;
+}
+
+.http_code{
+    font-size: 6rem;
+    margin: 0;
+}
+.http_msg{
+    font-size: 3rem;
+    margin: 0;
+}

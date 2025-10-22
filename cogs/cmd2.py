@@ -1,0 +1,167 @@
+import re
+
+import discord
+from discord import app_commands
+from discord.ext import commands
+
+from bot import check_developer
+from config import COLOR_OK, COLOR_ERROR, settings
+from exception import discord_error
+from logs import discord_logger as logger
+
+logger = logger.getChild("cmd2")
+
+
+class Commands2(commands.Cog):
+    """コマンド実装用のクラス"""
+
+    def __init__(self, bot: commands.Bot):
+        self.bot = bot
+
+    # @app_commands.command(description="メッセージ編集用")
+    # @app_commands.check(check_developer)
+    # @app_commands.guilds(settings.GUILD_ID)
+    # @app_commands.guild_only()
+    # @app_commands.rename(url="メッセージリンクのurl")
+    # async def remove_view(self, interaction: discord.Interaction, url: str):
+    #     """BOTが送信したメッセージの編集"""
+    #     # URLがWNH内のメッセージリンクかどうか検証
+    #     pattern = rf"(?<=https://discord.com/channels/{settings.GUILD_ID})/([0-9]*)/([0-9]*)"
+    #     result = re.search(pattern, url)
+    #     # WNH内のメッセージリンクではない場合
+    #     if result is None:
+    #         await interaction.response.send_message("このサーバーのメッセージではありません", ephemeral=True)  # noqa
+    #     # WNH内のメッセージリンクの場合
+    #     else:
+    #         # 値の代入とチャンネル・メッセージの取得
+    #         guild = self.bot.get_guild(settings.GUILD_ID)
+    #         channel_id = int(result.group(1))
+    #         channel = await guild.fetch_channel(channel_id)
+    #         message_id = int(result.group(2))
+    #         message = await channel.fetch_message(message_id)
+    #         # メッセージを編集
+    #         try:
+    #             await message.edit(content=message.content, embed=message.embeds[0], view=None)
+    #         # 送信者がこのBOTでない場合
+    #         except discord.Forbidden:
+    #             response_embed = discord.Embed(
+    #                 description="⚠️ 権限がありません。<@1019156547449913414>が送信したメッセージではない可能性があります。",
+    #                 color=COLOR_ERROR)
+    #             await interaction.response.send_message(embed=response_embed, ephemeral=True)  # noqa
+    #         else:
+    #             # コマンドへのレスポンス
+    #             response_embed = discord.Embed(description="ℹ️ 編集が完了しました", color=COLOR_OK)
+    #             await interaction.response.send_message(embed=response_embed, ephemeral=True)  # noqa
+    #             # ログの保存
+    #             logger.info(f"{interaction.user.display_name}（UID：{interaction.user.id}）"
+    #                         f"がコマンド「{interaction.command.name}」を使用し、メッセージ「{url}」を編集しました。。")
+
+    @app_commands.command(description="メッセージ送信用")
+    @app_commands.check(check_developer)
+    @app_commands.guilds(settings.GUILD_ID)
+    @app_commands.guild_only()
+    async def send_message(self, interaction: discord.Interaction):
+        """メッセージの送信"""
+        channel = interaction.channel
+        # Embedの作成
+        embed = discord.Embed(title="招待リンクについて",
+                              description=f"招待の際はこちらをご利用ください"
+                                          f"\nhttps://discord.gg/jy4JcxQ3TK ")
+        # Embedの送信
+        await channel.send(content="### 招待リンクについて\n"
+                                   "\n招待の際はこちらをご利用ください"
+                                   "\nhttps://discord.gg/jy4JcxQ3TK")
+        # コマンドへのレスポンス
+        response_embed = discord.Embed(description="ℹ️ 送信が完了しました", color=COLOR_OK)
+        await interaction.response.send_message(embed=response_embed, ephemeral=True)  # noqa
+        # ログの保存
+        logger.info(f"{interaction.user.display_name}（UID：{interaction.user.id}）"
+                    f"がコマンド「{interaction.command.name}」を使用しました。")
+
+    @app_commands.command(description="メッセージ送信用")
+    @app_commands.check(check_developer)
+    @app_commands.guilds(settings.GUILD_ID)
+    @app_commands.guild_only()
+    async def send_message2(self, interaction: discord.Interaction):
+        """メッセージの送信"""
+        channel = interaction.channel
+        # Embedの作成
+        embed = discord.Embed(title="サーバー規則改定のお知らせ",
+                              description=f"この度、サーバー規則を改定することとなりましたので、お知らせいたします。")
+        embed.add_field(name="改定日",
+                        value="<t:1747062000:D>",
+                        inline=False)
+        embed.add_field(name="改定内容",
+                        value="WNHをご利用頂くには、Wargaming IDを用いた認証が必須となっておりますが、認証に用いるメインアカウントについて、PC版WoWSを1戦以上プレイしていることが必須となりました。"
+                              "\nまた、処罰の種類に認証手続の取消を追加しました。",
+                        inline=False)
+        embed.add_field(name="改定に伴う影響",
+                        value="本改定によって再認証が必要となる場合、既にロールを変更させて頂いております。現在認証済みロールが付いている方は追加のご対応は必要ございません。",
+                        inline=False)
+        # Embedの送信
+        await channel.send(content="", embed=embed)
+        # コマンドへのレスポンス
+        response_embed = discord.Embed(description="ℹ️ 送信が完了しました", color=COLOR_OK)
+        await interaction.response.send_message(embed=response_embed, ephemeral=True)  # noqa
+        # ログの保存
+        logger.info(f"{interaction.user.display_name}（UID：{interaction.user.id}）"
+                    f"がコマンド「{interaction.command.name}」を使用しました。")
+
+    @app_commands.command(description="メッセージ編集用")
+    @app_commands.check(check_developer)
+    @app_commands.guilds(settings.GUILD_ID)
+    @app_commands.guild_only()
+    @app_commands.rename(url="メッセージリンクのurl")
+    async def edit_message2(self, interaction: discord.Interaction, url: str):
+        """BOTが送信したメッセージの編集"""
+        # URLがWNH内のメッセージリンクかどうか検証
+        pattern = rf"(?<=https://discord.com/channels/{settings.GUILD_ID})/([0-9]*)/([0-9]*)"
+        result = re.search(pattern, url)
+        # WNH内のメッセージリンクではない場合
+        if result is None:
+            await interaction.response.send_message("このサーバーのメッセージではありません", ephemeral=True)  # noqa
+        # WNH内のメッセージリンクの場合
+        else:
+            # 値の代入とチャンネル・メッセージの取得
+            guild = self.bot.get_guild(settings.GUILD_ID)
+            channel_id = int(result.group(1))
+            channel = await guild.fetch_channel(channel_id)
+            message_id = int(result.group(2))
+            message = await channel.fetch_message(message_id)
+            # メッセージを編集
+            try:
+                await message.edit()
+            # 送信者がこのBOTでない場合
+            except discord.Forbidden:
+                response_embed = discord.Embed(
+                    description="⚠️ 権限がありません。<@1019156547449913414>が送信したメッセージではない可能性があります。",
+                    color=COLOR_ERROR)
+                await interaction.response.send_message(embed=response_embed, ephemeral=True)  # noqa
+            else:
+                # コマンドへのレスポンス
+                response_embed = discord.Embed(description="ℹ️ 編集が完了しました", color=COLOR_OK)
+                await interaction.response.send_message(embed=response_embed, ephemeral=True)  # noqa
+                # ログの保存
+                logger.info(f"{interaction.user.display_name}（UID：{interaction.user.id}）"
+                            f"がコマンド「{interaction.command.name}」を使用し、メッセージ「{url}」を編集しました。。")
+
+    async def cog_app_command_error(self, interaction, error):
+        """コマンド実行時のエラー処理"""
+        await discord_error(interaction.command.name, interaction, error, logger)
+
+
+async def send_dm_gas_5thcup(bot, discord_id, types):
+    """サーバーによる認証後のロール付与"""
+    user = await bot.fetch_user(discord_id)
+    if types == "entry":
+        response_embed = discord.Embed(title="WNH CUP the 5thへの選手申込が完了しました。",
+                                       description="")
+    else:
+        response_embed = discord.Embed(title="WNH CUP the 5thへの選手申込をキャンセルしました。",
+                                       description="")
+    await user.send(embed=response_embed)
+
+
+async def setup(bot):
+    """起動時のコグへの追加"""
+    await bot.add_cog(Commands2(bot))
