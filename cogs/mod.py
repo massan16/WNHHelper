@@ -549,18 +549,17 @@ class DeleteMessageForm(ui.Modal, title="メッセージを削除"):
         component=discord.ui.Select(
             options=[
                 discord.SelectOption(label="無許可の宣伝行為"),
-                discord.SelectOption(label="外部リンクの投稿"),
                 discord.SelectOption(label="外部戦績サイト等のコンテンツの投稿"),
                 discord.SelectOption(label="処罰に関する議論"),
-                discord.SelectOption(label="他人に対する攻撃"),
                 discord.SelectOption(label="不適切な表現"),
                 discord.SelectOption(label="スパム行為"),
+                discord.SelectOption(label="規則第6条第3項に反する行為"),
                 discord.SelectOption(label="オフトピック投稿"),
+                discord.SelectOption(label="#質問エリアにおける他者の投稿に対する反論等の投稿"),
                 discord.SelectOption(label="Modに関する投稿"),
                 discord.SelectOption(label="初心者が入りにくい話題の高頻度投稿"),
                 discord.SelectOption(label="メインアカウント以外での本人確認"),
                 discord.SelectOption(label="晒し行為（IGNがマスク処理されていないSSの投稿を含む）"),
-                discord.SelectOption(label="DMによる迷惑行為"),
                 discord.SelectOption(label="政治・宗教に関する投稿"),
                 discord.SelectOption(label="違法行為並びに同行為に関する投稿"),
                 discord.SelectOption(label="各種サービス規約違反行為及び同行為に関する投稿"),
@@ -574,7 +573,7 @@ class DeleteMessageForm(ui.Modal, title="メッセージを削除"):
                 discord.SelectOption(label="その他管理者が不適切と判断した行為"),
             ],
             min_values=1,
-            max_values=24,
+            max_values=23,
         ),
     )
 

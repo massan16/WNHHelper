@@ -16,17 +16,17 @@ from logs import discord_logger as logger
 logger = logger.getChild("contact")
 COOLDOWN = commands.CooldownMapping.from_cooldown(1, 5, commands.BucketType.member)  # noqa
 DICT_CATEGORY = {settings.channel_id.GENERAL_INQUIRY_OPEN: "INQUIRY",
-                 settings.channel_id.GENERAL_INQUIRY_CLOSE: "INQUIRY", settings.channel_id.REPORT_OPEN: "REPORT",
-                 settings.channel_id.REPORT_CLOSE: "REPORT", settings.channel_id.CLAN_OPEN: "CLAN", settings.channel_id.CLAN_CLOSE: "CLAN"}
+                 settings.channel_id.GENERAL_INQUIRY_CLOSE: "INQUIRY", settings.channel_id.TICKET_REPORT_OPEN: "REPORT",
+                 settings.channel_id.TICKET_REPORT_CLOSE: "REPORT", settings.channel_id.CLAN_OPEN: "CLAN", settings.channel_id.CLAN_CLOSE: "CLAN"}
 DICT_NAME = {"INQUIRY": "ご意見・ご要望・その他お問い合わせ", "REPORT": "違反行為の報告",
              "CLAN": "公認クランプログラムへのお申し込み"}
-DICT_OPEN_CATEGORY = {"INQUIRY": settings.channel_id.GENERAL_INQUIRY_OPEN, "REPORT": settings.channel_id.REPORT_OPEN,
+DICT_OPEN_CATEGORY = {"INQUIRY": settings.channel_id.GENERAL_INQUIRY_OPEN, "REPORT": settings.channel_id.TICKET_REPORT_OPEN,
                       "CLAN": settings.channel_id.CLAN_OPEN}
-DICT_CLOSE_CATEGORY = {"INQUIRY": settings.channel_id.GENERAL_INQUIRY_CLOSE, "REPORT": settings.channel_id.REPORT_CLOSE,
+DICT_CLOSE_CATEGORY = {"INQUIRY": settings.channel_id.GENERAL_INQUIRY_CLOSE, "REPORT": settings.channel_id.TICKET_REPORT_CLOSE,
                        "CLAN": settings.channel_id.CLAN_CLOSE}
-DICT_LOG_CATEGORY = {"INQUIRY": settings.channel_id.GENERAL_INQUIRY_LOG, "REPORT": settings.channel_id.REPORT_LOG,
+DICT_LOG_CATEGORY = {"INQUIRY": settings.channel_id.GENERAL_INQUIRY_LOG, "REPORT": settings.channel_id.TICKET_REPORT_LOG,
                      "CLAN": settings.channel_id.CLAN_LOG}
-DICT_SAVE_CATEGORY = {"INQUIRY": settings.channel_id.GENERAL_INQUIRY_SAVE, "REPORT": settings.channel_id.REPORT_SAVE,
+DICT_SAVE_CATEGORY = {"INQUIRY": settings.channel_id.GENERAL_INQUIRY_SAVE, "REPORT": settings.channel_id.TICKET_REPORT_SAVE,
                       "CLAN": settings.channel_id.CLAN_SAVE}
 
 

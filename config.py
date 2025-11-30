@@ -48,10 +48,10 @@ class ChannelID(BaseSettings):
     GENERAL_INQUIRY_CLOSE: int  # その他お問い合わせ
     GENERAL_INQUIRY_LOG: int  # その他お問い合わせ
     GENERAL_INQUIRY_SAVE: int  # その他お問い合わせ
-    REPORT_OPEN: int  # 通報
-    REPORT_CLOSE: int  # 通報
-    REPORT_LOG: int  # 通報
-    REPORT_SAVE: int  # 通報
+    TICKET_REPORT_OPEN: int  # 通報
+    TICKET_REPORT_CLOSE: int  # 通報
+    TICKET_REPORT_LOG: int  # 通報
+    TICKET_REPORT_SAVE: int  # 通報
     CLAN_OPEN: int  # 公認クラン
     CLAN_CLOSE: int  # 公認クラン
     CLAN_LOG: int  # 公認クラン
