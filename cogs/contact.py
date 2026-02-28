@@ -191,7 +191,7 @@ async def set_channel_button_callback(interaction: discord.Interaction, select: 
             embed.add_field(name="情報", value=f"チケット：{ticket.name}"
                                                f"\n内容：チケット作成")
             embed.add_field(name="カテゴリ", value=f"{category_name}")
-            embed.set_author(name=interaction.user.name, icon_url=interaction.user.avatar.url)
+            embed.set_author(name=interaction.user.name, icon_url=interaction.user.display_avatar.url)
             channel = interaction.guild.get_channel(DICT_LOG_CATEGORY[select_value])
             await channel.send(embed=embed)
             # Embedを送信
@@ -425,7 +425,7 @@ async def ticket_close_button_callback(interaction: discord.Interaction):
         embed.add_field(name="情報", value=f"チケット：{interaction.channel.name}"
                                            f"\n内容：チケット閉")
         embed.add_field(name="カテゴリ", value=f"{category_name}")
-        embed.set_author(name=interaction.user.name, icon_url=interaction.user.avatar.url)
+        embed.set_author(name=interaction.user.name, icon_url=interaction.user.display_avatar.url)
         channel = interaction.guild.get_channel(DICT_LOG_CATEGORY[category])
         await channel.send(embed=embed)
         # 通知の送信
@@ -514,7 +514,7 @@ async def ticket_open_button_callback(interaction: discord.Interaction, button: 
         embed.add_field(name="情報", value=f"チケット：{interaction.channel.name}"
                                            f"\n内容：チケット再開")
         embed.add_field(name="カテゴリ", value=f"{category_name}")
-        embed.set_author(name=interaction.user.name, icon_url=interaction.user.avatar.url)
+        embed.set_author(name=interaction.user.name, icon_url=interaction.user.display_avatar.url)
         channel = interaction.guild.get_channel(DICT_LOG_CATEGORY[category])
         await channel.send(embed=embed)
         # 通知の送信
@@ -573,7 +573,7 @@ async def ticket_save_button_callback(interaction: discord.Interaction, button: 
         embed.add_field(name="チケット所有者", value=f"{user.mention}")
         embed.add_field(name="チケット", value=f"{interaction.channel.name}")
         embed.add_field(name="カテゴリ", value=f"{category_name}")
-        embed.set_author(name=user.name, icon_url=user.avatar.url)
+        embed.set_author(name=user.name, icon_url=user.display_avatar.url)
         channel = interaction.guild.get_channel(DICT_SAVE_CATEGORY[category])
         await channel.send(embed=embed, file=transcript_file)
         # 通知の送信
@@ -610,7 +610,7 @@ async def ticket_delete_button_callback(interaction: discord.Interaction, button
         embed.add_field(name="情報", value=f"チケット：{interaction.channel.name}"
                                            f"\n内容：チケット削除")
         embed.add_field(name="カテゴリ", value=f"{category_name}")
-        embed.set_author(name=interaction.user.name, icon_url=interaction.user.avatar.url)
+        embed.set_author(name=interaction.user.name, icon_url=interaction.user.display_avatar.url)
         channel = interaction.guild.get_channel(DICT_LOG_CATEGORY[category])
         await channel.send(embed=embed)
         # 通知の送信
