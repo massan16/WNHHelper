@@ -94,8 +94,8 @@ class CreateTicketView(ui.LayoutView):
                            "* 不適切なメッセージを報告したい場合\n"
                            "報告したいメッセージを右クリックして「アプリ」→「メッセージの報告」をクリックし、報告内容を記載して送信してください\n\n"
                            "* 不適切なニックネームやアバター・VCでの違反行為等メッセージでの違反以外を報告したい場合\n"
-                           "ユーザーを右クリックして「アプリ」→「ユーザーの報告」をクリックし、報告内容を記載して送信してください\n\n"
-                           "上記の手順でエラーが起こる場合は、下記リストから「違反行為の報告」を選択してチケットを作成してください。")
+                           "ユーザーを右クリックして「アプリ」→「ユーザーの報告」をクリックし、報告内容を記載して送信してください")
+                           # "上記の手順でエラーが起こる場合は、下記リストから「違反行為の報告」を選択してチケットを作成してください。")
     text5 = ui.TextDisplay("### セクシャルハラスメント等の通報について\n"
                            "セクシャルハラスメント等の通報で女性スタッフによる対応を希望する場合は<@767646985632481320>のDMへご連絡ください。")
     container_container = ui.Container(text1, text2, text3, text4, text5)
@@ -109,7 +109,7 @@ class CreateTicketView(ui.LayoutView):
         options=[
             discord.SelectOption(label="ご意見・ご要望", value="OPINION", emoji="💬"),
             discord.SelectOption(label="WNH運営チームへの問い合わせ", value="INQUIRY", emoji="📨"),
-            discord.SelectOption(label="違反行為の報告", value="REPORT", emoji="🚨"),
+            # discord.SelectOption(label="違反行為の報告", value="REPORT", emoji="🚨"),
             discord.SelectOption(label="公認クランプログラムへのお申し込み", value="CLAN", emoji="🈸"),
         ],
     )

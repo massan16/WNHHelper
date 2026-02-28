@@ -262,10 +262,11 @@ class Moderation(commands.Cog):
                                            moderator_id=interaction.user.id,
                                            length="",
                                            reason=f"{old_case_id}への申立による", datetime=action_datetime, point=point)
-            await db.update_modlog(old_case_id=old_case_id, change_type=change_type, new_case_id=case_id,
+            if settings.ENV == "prod":
+                await db.update_modlog(old_case_id=old_case_id, change_type=change_type, new_case_id=case_id,
                                    change_datetime=action_datetime)
-            # DBへ累計ポイントを更新
-            await db.save_point(user_id=user.id, point=total_point)
+                # DBへ累計ポイントを更新
+                await db.save_point(user_id=user.id, point=total_point)
             # 警告メッセージの作成
             change_type_str = CHANGE_TYPE[change_type]
             # 記録CHへケース情報を送信
@@ -299,7 +300,8 @@ class Moderation(commands.Cog):
             # ログCHへケース情報を送信
             await channel_mod_log.send(embed=log_embed)
             # DBへケースIDと記録スレッドIDを保存
-            await db.update_modlog_id(thread_id=log.thread.id, case_id=case_id)  # noqa
+            if settings.ENV == "prod":
+                await db.update_modlog_id(thread_id=log.thread.id, case_id=case_id)  # noqa
             # コマンドへのレスポンス
             response_embed = discord.Embed(description="ℹ️ 処罰内容を変更しました", color=COLOR_OK)
             await interaction.followup.send(embed=response_embed)
@@ -1073,23 +1075,16 @@ class MessageReportForm(ui.Modal, title="不適切なメッセージを報告"):
         super().__init__()
         self.message = message
 
-    # # フォームの入力項目の定義（最大5個）
-    # warn = ui.TextDisplay("### 注意事項\n"
-    #                       "このフォームはメッセージの報告用です。不適切なアバターやニックネーム、VCでの行為の報告は、ユーザーを右クリックして「アプリ>ユーザーの報告」からお願いします。")
-
-    input_warn = ui.TextInput(
-        label="注意事項（入力しないでください）",
-        style=discord.TextStyle.long,  # noqa
-        placeholder="このフォームはユーザーの報告用です。報告したい特定のメッセージがある場合は、メッセージを右クリックして「アプリ>メッセージの報告」からお願いします。",
-        max_length=1,
-        required=False,
-    )
+    # フォームの入力項目の定義（最大5個）
+    warn = ui.TextDisplay("### 注意事項\n"
+                          "このフォームは**WNH運営への**メッセージの報告用です。\n"
+                          "不適切なアバターやニックネーム、VCでの行為の報告は、ユーザーを右クリックして「アプリ>ユーザーの報告」からお願いします。")
 
     input_text = ui.Label(
         text="報告内容の詳細",
         component=ui.TextInput(
             style=discord.TextStyle.long,  # noqa
-            placeholder="例：〇〇に対する暴言を吐いている",
+            placeholder="例：〇〇に対する暴言",
             max_length=300,
         )
     )
@@ -1158,16 +1153,11 @@ class UserReportForm(ui.Modal, title="不適切なユーザーを報告"):
 
     # フォームの入力項目の定義（最大5個）
 
-    # warn = ui.TextDisplay("### 注意事項\n"
-    #                       "このフォームはメッセージの報告用です。不適切なアバターやニックネーム、VCでの行為の報告は、ユーザーを右クリックして「アプリ>ユーザーの報告」からお願いします。")
+    warn = ui.TextDisplay("### 注意事項\n"
+                          "このフォームは**WNH運営への**ユーザーの報告用です。\n"
+                          "報告したい特定のメッセージがある場合は、メッセージを右クリックして「アプリ>メッセージの報告」からお願いします。\n"
+                          "なお、VCでの違反行為で処罰を希望する場合、証拠データの共有リンク等を添付してください。")
 
-    input_warn = ui.TextInput(
-        label="注意事項（入力しないでください）",
-        style=discord.TextStyle.long,  # noqa
-        placeholder="このフォームはユーザーの報告用です。報告したい特定のメッセージがある場合は、メッセージを右クリックして「アプリ>メッセージの報告」からお願いします。",
-        max_length=1,
-        required=False,
-    )
 
     input_text = ui.Label(
         text="報告内容の詳細",
@@ -1241,9 +1231,12 @@ async def auto_timeout(interaction: discord.Interaction, base_case_id: int, memb
         dt = datetime.now(JP)
         action_datetime = dt.strftime("%Y/%m/%d %H:%M")
         # DBへケース情報を保存
-        case_id = await db.save_modlog(moderate_type=3, user_id=member.id, moderator_id=interaction.client.user.id,
+        if settings.ENV == "prod":
+            case_id = await db.save_modlog(moderate_type=3, user_id=member.id, moderator_id=interaction.client.user.id,
                                        length=length,
                                        reason=f"{base_case_id}に基づく自動処理", datetime=action_datetime, point=0)
+        else:
+            case_id = 999
         # 処分通達メッセージを作成
         dm_embed = discord.Embed(title="発言禁止処分の通知",
                                  description=f"WNH運営チームです。あなたは次の期間発言禁止となりました。"
@@ -1274,10 +1267,11 @@ async def auto_timeout(interaction: discord.Interaction, base_case_id: int, memb
         log_embed.add_field(name="記録へのリンク",
                             value=f"<#{log.thread.id}>", inline=False)  # noqa
         log_embed.set_footer(text=f"UID：{member.id}・{action_datetime}")
-        # ログCHへケース情報を送信
-        await channel_mod_log.send(embed=log_embed)
-        # DBへケースIDと記録スレッドIDを保存
-        await db.update_modlog_id(thread_id=log.thread.id, case_id=case_id)  # noqa
+        if settings.ENV == "prod":
+            # ログCHへケース情報を送信
+            await channel_mod_log.send(embed=log_embed)
+            # DBへケースIDと記録スレッドIDを保存
+            await db.update_modlog_id(thread_id=log.thread.id, case_id=case_id)  # noqa
         # 違反ユーザーのDMへ通達を送信
         try:
             await member.send(embed=dm_embed)
@@ -1316,9 +1310,12 @@ async def auto_ban(interaction: discord.Interaction, base_case_id: int, member: 
     dt = datetime.now(JP)
     action_datetime = dt.strftime("%Y/%m/%d %H:%M")
     # DBへケース情報を保存
-    case_id = await db.save_modlog(moderate_type=4, user_id=member.id, moderator_id=interaction.client.user.id,
+    if settings.ENV == "prod":
+        case_id = await db.save_modlog(moderate_type=4, user_id=member.id, moderator_id=interaction.client.user.id,
                                    length="",
                                    reason=f"{base_case_id}に基づく自動処理", datetime=action_datetime, point=0)
+    else:
+        case_id = 999
     # 処分通達メッセージを作成
     dm_embed = discord.Embed(title="BAN処分の通知",
                              description=f"WNH運営チームです。あなたはBANとなりました。"
@@ -1344,10 +1341,11 @@ async def auto_ban(interaction: discord.Interaction, base_case_id: int, member: 
     log_embed.add_field(name="記録へのリンク",
                         value=f"<#{log.thread.id}>", inline=False)  # noqa
     log_embed.set_footer(text=f"UID：{member.id}・{action_datetime}")
-    # ログCHへケース情報を送信
-    await channel_mod_log.send(embed=log_embed)
-    # DBへケースIDと記録スレッドIDを保存
-    await db.update_modlog_id(thread_id=log.thread.id, case_id=case_id)  # noqa
+    if settings.ENV == "prod":
+        # ログCHへケース情報を送信
+        await channel_mod_log.send(embed=log_embed)
+        # DBへケースIDと記録スレッドIDを保存
+        await db.update_modlog_id(thread_id=log.thread.id, case_id=case_id)  # noqa
     # 違反ユーザーのDMへ通達を送信
     if member in guild.members:
         try:
