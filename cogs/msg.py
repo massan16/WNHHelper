@@ -241,7 +241,8 @@ class Message(commands.Cog):
         result2 = re.search(pattern, url2)
         # WNH内のメッセージリンクではない場合
         if result1 is None or result2 is None:
-            await interaction.response.send_message("このサーバーのメッセージではありません", ephemeral=True)  # noqa
+            error_embed = discord.Embed(description="⚠️ このサーバーのメッセージではありません", color=COLOR_ERROR)
+            await interaction.response.send_message(error_embed, ephemeral=True)  # noqa
         # WNH内のメッセージリンクの場合
         else:
             # 値の代入とチャンネル・メッセージの取得
@@ -285,7 +286,8 @@ class Message(commands.Cog):
         result = re.search(pattern, url)
         # WNH内のメッセージリンクではない場合
         if result is None:
-            await interaction.response.send_message("このサーバーのメッセージではありません", ephemeral=True)  # noqa
+            error_embed = discord.Embed(description="⚠️ このサーバーのメッセージではありません", color=COLOR_ERROR)
+            await interaction.response.send_message(error_embed, ephemeral=True)  # noqa
         # WNH内のメッセージリンクの場合
         else:
             # 応答時間の延長

@@ -30,7 +30,8 @@ class Commands2(commands.Cog):
     #     result = re.search(pattern, url)
     #     # WNH内のメッセージリンクではない場合
     #     if result is None:
-    #         await interaction.response.send_message("このサーバーのメッセージではありません", ephemeral=True)  # noqa
+    #             error_embed = discord.Embed(description="⚠️ このサーバーのメッセージではありません", color=COLOR_ERROR)
+    #             await interaction.response.send_message(error_embed, ephemeral=True)  # noqa # noqa
     #     # WNH内のメッセージリンクの場合
     #     else:
     #         # 値の代入とチャンネル・メッセージの取得
@@ -119,7 +120,8 @@ class Commands2(commands.Cog):
         result = re.search(pattern, url)
         # WNH内のメッセージリンクではない場合
         if result is None:
-            await interaction.response.send_message("このサーバーのメッセージではありません", ephemeral=True)  # noqa
+            error_embed = discord.Embed(description="⚠️ このサーバーのメッセージではありません", color=COLOR_ERROR)
+            await interaction.response.send_message(error_embed, ephemeral=True)  # noqa
         # WNH内のメッセージリンクの場合
         else:
             # 値の代入とチャンネル・メッセージの取得
