@@ -863,7 +863,12 @@ class WarnUserForm(ui.Modal, title="ユーザーに警告"):
         # 応答時間の延長
         await interaction.response.defer(ephemeral=True)  # noqa
         # 警告理由、ポイント、コメントの取得
-        reason = self.type_select.component.values[0]  # noqa
+        reasons = self.type_select.component.values  # noqa
+        reason = reasons[0]
+        if len(reasons) >= 2:
+            for reason_ in reasons[1:]:
+                reason += f"、{reason_}"
+        print(reason)
         point = self.point_select.component.values[0]  # noqa
         comment = self.comment_input.component.value  # noqa
         # ギルドとチャンネルの取得
@@ -1283,7 +1288,8 @@ async def auto_timeout(interaction: discord.Interaction, base_case_id: int, memb
             await thread.send(member.mention)
             await thread.send(embed=dm_embed)
         # 発言禁止処理
-        await member.timeout(timedelta(days=length), reason=f"ケース{case_id}")
+        if settings.ENV == "prod":
+            await member.timeout(timedelta(days=length), reason=f"ケース{case_id}")
         # コマンドへのレスポンス
         response_embed = discord.Embed(description="ℹ️ 警告を発行・発言禁止にしました", color=COLOR_OK)
         await interaction.followup.send(embed=response_embed, ephemeral=True)
@@ -1353,7 +1359,8 @@ async def auto_ban(interaction: discord.Interaction, base_case_id: int, member: 
         except discord.Forbidden:
             pass
     # ユーザーをBAN
-    await guild.ban(user=member, delete_message_days=0, reason=f"ケース{case_id}")
+    if settings.ENV == "prod":
+        await guild.ban(user=member, delete_message_days=0, reason=f"ケース{case_id}")
     # コマンドへのレスポンス
     response_embed = discord.Embed(description="ℹ️ 警告を発行・BANしました", color=COLOR_OK)
     await interaction.followup.send(embed=response_embed, ephemeral=True)
