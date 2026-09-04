@@ -21,6 +21,7 @@ DISALLOW_MENTION = discord.AllowedMentions(everyone=False, users=False, roles=Fa
 INITIAL_EXTENSIONS = [
     "cogs.auth",
     "cogs.contact",
+    "cogs.clanbattle",
     "cogs.cmd1",
     "cogs.cmd2",
     "cogs.event",

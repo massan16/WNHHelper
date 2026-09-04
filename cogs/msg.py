@@ -37,10 +37,11 @@ class Message(commands.Cog):
     @app_commands.choices(
         message=[
             discord.app_commands.Choice(name="auth", value="auth"),
+            discord.app_commands.Choice(name="clanbattle", value="clanbattle"),
             discord.app_commands.Choice(name="contact", value="contact"),
+            discord.app_commands.Choice(name="division", value="division"),
             discord.app_commands.Choice(name="event1", value="event1"),
             discord.app_commands.Choice(name="event2", value="event2"),
-            discord.app_commands.Choice(name="division", value="division"),
             discord.app_commands.Choice(name="newbie_role", value="newbie_role"),
             discord.app_commands.Choice(name="rule", value="rule"),
             discord.app_commands.Choice(name="no_role", value="no_role")
@@ -50,9 +51,12 @@ class Message(commands.Cog):
         if message == "auth":
             auth = self.bot.get_cog("Auth")
             await auth.create_message(interaction)  # noqa
+        elif message == "clanbattle":
+            cb = self.bot.get_cog("ClanBattle")
+            await cb.create_message(interaction)  # noqa
         elif message == "contact":
-            auth = self.bot.get_cog("Contact")
-            await auth.create_message(interaction)  # noqa
+            contact = self.bot.get_cog("Contact")
+            await contact.create_message(interaction)  # noqa
         elif message == "division":
             division = self.bot.get_cog("Division")
             await division.create_message(interaction)  # noqa

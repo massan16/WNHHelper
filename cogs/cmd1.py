@@ -36,6 +36,7 @@ class Commands1(commands.Cog):
         cog_name=[
             discord.app_commands.Choice(name="auth", value="auth"),
             discord.app_commands.Choice(name="contact", value="contact"),
+            discord.app_commands.Choice(name="clanbattle", value="clanbattle"),
             discord.app_commands.Choice(name="cmd1", value="cmd1"),
             discord.app_commands.Choice(name="cmd2", value="cmd2"),
             discord.app_commands.Choice(name="discord_event", value="discord_event"),

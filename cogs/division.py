@@ -64,12 +64,12 @@ class DivisionView(ui.LayoutView):
     action_row = ui.ActionRow()
 
     @action_row.button(label="分隊通知ロールの取得/解除", emoji="🤝", style=discord.ButtonStyle.blurple,  # noqa
-                       custom_id="division")  # noqa
+                       custom_id="division_role")  # noqa
     async def division_role_button(self, interaction: discord.Interaction, button: ui.Button):
         await division_role_button_callback(interaction, button)
 
     @action_row.button(label="分隊を募集する", style=discord.ButtonStyle.blurple,  # noqa
-                       custom_id="division_role")
+                       custom_id="division")
     async def division_form_button(self, interaction: discord.Interaction, button: ui.Button):
         await division_form_button_callback(interaction, button)
 
@@ -172,7 +172,7 @@ class DivisionForm(ui.Modal, title="分隊募集フォーム"):
         avatar = user.display_avatar.url
         # 分隊募集メッセージ（Embed）の作成
         embed = discord.Embed(title=f"分隊募集中！", color=0x0000ff)
-        embed.add_field(name="1.日時", value=self.dtime.component.value, inline=False)  # noqa
+        embed.add_field(name="1. 日時", value=self.dtime.component.value, inline=False)  # noqa
         embed.add_field(name="2. Tier（オペレーションの場合は名称）", value=self.tier.component.value,
                         inline=False)  # noqa
         embed.add_field(name="3. 募集人数", value=self.member_count.component.value, inline=False)  # noqa

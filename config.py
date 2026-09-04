@@ -21,6 +21,7 @@ class RoleID(BaseSettings):
     MATTARI: int  # まったりロール
     GATSU: int  # がつがつロール
     DIVISION: int  # 分隊ロール
+    CLANBATTLE: int # 傭兵ロール
 
     model_config = SettingsConfigDict(
         env_file=".env.role",
@@ -33,6 +34,7 @@ class ChannelID(BaseSettings):
     """ 環境変数を読み込む """
     RULE: int  # ルールCH
     DIVISION: int  # 分隊募集CH
+    CLANBATTLE: int  # 傭兵募集CH
     MOD_CASE: int  # モデレーション記録CH
     MOD_LOG: int  # モデレーションログCH
     MOD_CONTACT_LOG: int  # 処罰に対する意見等CH
