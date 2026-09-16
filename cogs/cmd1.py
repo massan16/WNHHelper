@@ -137,6 +137,33 @@ class Commands1(commands.Cog):
             logger.info(f"{interaction.user.display_name}（UID：{interaction.user.id}）"
                         f"がコマンド「{interaction.command.name}」を使用しました。")
 
+    @app_commands.command(description="メンテナンスメッセージ送信用")
+    @app_commands.check(check_developer)
+    @app_commands.guilds(settings.GUILD_ID)
+    @discord.app_commands.rename(ts1="開始日時", ts2="終了日時")
+    @app_commands.guild_only()
+    async def maintenance(self, interaction: discord.Interaction, ts1:str, ts2:str):
+        """メッセージの送信"""
+        channel = interaction.channel
+        # Embedの作成
+        embed = discord.Embed(title="WNH Helperの稼働停止に関するお知らせ",
+                              description=f"ホスティング元のメンテナンス作業に伴い、<@1019156547449913414>は{ts1}から{ts2}までの間、稼働を停止します。この間、以下の機能はご利用いただけません。"
+                                          f"\nなお、<@1019156547449913414>の手動起動が必要となった場合、稼働再開が遅れる場合もございます。")
+        embed.add_field(name="主な利用できない機能",value="* サーバー加入手続き（ルール同意/WG ID認証）"
+                                                      "\n* 分隊募集"
+                                                      "\n* イベントの参加申し込み"
+                                                      "\n* 初心者ロールのつけ外し"
+                                                      "\n* 上記の他、本BOTに関係する機能")
+        # Embedの送信
+        await channel.send(embed=embed)
+        # コマンドへのレスポンス
+        response_embed = discord.Embed(description="ℹ️ 送信が完了しました", color=COLOR_OK)
+        await interaction.response.send_message(embed=response_embed, ephemeral=True)  # noqa
+        # ログの保存
+        logger.info(f"{interaction.user.display_name}（UID：{interaction.user.id}）"
+                    f"がコマンド「{interaction.command.name}」を使用しました。")
+
+
     @app_commands.command(description="クランURLの生成")
     @app_commands.checks.has_any_role(settings.role_id.WNH_STAFF, settings.role_id.CLAN_RECRUITER)
     @app_commands.guild_only()

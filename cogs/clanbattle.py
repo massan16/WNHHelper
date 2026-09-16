@@ -42,17 +42,17 @@ class CBView(ui.LayoutView):
     def __init__(self) -> None:
         super().__init__(timeout=None)
 
-    text1 = ui.TextDisplay("## 傭兵募集について\n"
-                           "当サーバーでの傭兵への応募は次の手順でご利用いただけます\n")
-    text2 = ui.TextDisplay("### 応募方法1 既存の募集への応募\n"
-                           f"1. <#{settings.channel_id.CLANBATTLE}>から応募したい募集を探し、応募ボタンを押してください。\n"
-                           f"2. 作成されるスレッドからリクルーターとやりとりしてください。"
-                           "### 応募方法2 応募したい募集がない場合\n"
-                           "1. 下のボタンを押して応募フォームを開きます\n"
-                           "2. <#{settings.channel_id.CLANBATTLE}>にプライベートスレッドが作成されますので、注視して下さい。")
-    text3 = ui.TextDisplay("### 傭兵募集通知について\n"
-                           "傭兵募集の通知が欲しい人は下のボタンを押すと専用ロールが付与されます\n"
-                           "不要になった場合は再度押して下さい。")
+    text1 = ui.TextDisplay("## 傭兵募集について"
+                           "\n当サーバーでの傭兵としての応募は次の手順でご利用いただけます")
+    text2 = ui.TextDisplay("\n### 応募方法1 既存の募集への応募"
+                           f"\n1. <#{settings.channel_id.CLANBATTLE}>から応募したい募集を探し、応募ボタンを押してください。"
+                           f"\n2. 作成されるスレッドからリクルーターとやりとりしてください。"
+                           f"\n### 応募方法2 応募したい募集がない場合"
+                           f"\n1. 下のボタンを押して応募フォームを開きます"
+                           f"\n2. <#{settings.channel_id.CLANBATTLE}>にプライベートスレッドが作成されますので、注視して下さい。")
+    text3 = ui.TextDisplay("\n### 傭兵募集通知について"
+                           "\n傭兵募集の通知が欲しい人は下のボタンを押すと専用ロールが付与されます"
+                           "\n不要になった場合は再度押して下さい。")
     container = ui.Container(text1, text2, text3)
 
     action_row = ui.ActionRow()
