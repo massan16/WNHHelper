@@ -115,7 +115,7 @@ async def cb_invite_form_button_callback(interaction: discord.Interaction, butto
     ボタン系はボタンのcallbackに直接書かず、別関数にすることによって処理内容変更後にボタンを再生成せずとも反映できる。
     """
     if interaction.user.get_role(settings.role_id.CLAN_RECRUITER) is None:
-        error_embed = discord.Embed(description=f"⚠️ この機能は<@&{settings.role_id.CLAN_RECRUITER}>のみ利用できます>", color=COLOR_ERROR)
+        error_embed = discord.Embed(description=f"⚠️ この機能は<@&{settings.role_id.CLAN_RECRUITER}>のみ利用できます", color=COLOR_ERROR)
         await interaction.response.send_message(embed=error_embed, ephemeral=True)  # noqa
     if interaction.user.is_timed_out():
         error_embed = discord.Embed(description="⚠️ タイムアウト中は利用できません", color=COLOR_ERROR)
