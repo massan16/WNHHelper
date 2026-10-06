@@ -540,6 +540,8 @@ class Moderation(commands.Cog):
             except discord.Forbidden:
                 pass
             await member.kick(reason="乗っ取りによるスパム行為")
+        response_embed = discord.Embed(description="ℹ️ ユーザーをキックしました", color=COLOR_OK)
+        await interaction.followup.send(embed=response_embed, ephemeral=True)
         logger.info(f"{interaction.user.display_name}（UID：{interaction.user.id}）"
                     f"がフォーム「乗っ取りによるスパマーをキック」を使用し、ユーザー：{member.display_name}（UID：{member.id}）"
                     f"をキックしました。")
