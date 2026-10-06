@@ -16,7 +16,7 @@ logger = logger.getChild("mod")
 JP = pytz.timezone("Asia/Tokyo")
 
 # モデレーション種類の辞書の定義
-MODERATION_TYPE = {1: "厳重注意", 2: "警告", 3: "発言禁止", 4: "BAN", 5: "処罰変更（内容変更）", 6: "処罰変更（取消）",
+MODERATION_TYPE = {1: "厳重注意", 2: "警告", 3: "発言禁止", 4: "キック", 5: "BAN", 6: "処罰変更（内容変更）", 7: "処罰変更（取消）",
                    11: "メッセージの削除", 12: "プロフィールの変更指示"}
 CHANGE_TYPE = {1: "内容変更", 2: "取消"}
 
@@ -60,6 +60,13 @@ class Moderation(commands.Cog):
         )
         self.bot.tree.add_command(self.warn_profile_menu)
         self.warn_profile_menu.error(self.cog_app_command_error)
+
+        self.kick_spammer_menu = app_commands.ContextMenu(
+            name="乗っ取りによるスパマーをキック",
+            callback=self.kick_spammer,
+        )
+        self.bot.tree.add_command(self.kick_spammer_menu)
+        self.warn_user_menu.error(self.cog_app_command_error)
 
     @app_commands.command(description="MODログ（単一）の取得")
     @app_commands.checks.has_role(settings.role_id.WNH_STAFF)
@@ -469,6 +476,74 @@ class Moderation(commands.Cog):
         """コンテキストメニューからのユーザーの報告"""
         # 報告用フォームを表示
         await interaction.response.send_modal(UserReportForm(member=member))  # noqa
+
+    @app_commands.checks.has_role(settings.role_id.SENIOR_MOD)
+    @app_commands.guilds(settings.GUILD_ID)
+    @app_commands.guild_only()
+    async def kick_spammer(self, interaction: discord.Interaction, member: discord.Member):
+        # 応答時間の延長
+        await interaction.response.defer(ephemeral=True)  # noqa
+        # ギルドとチャンネルの取得
+        guild = interaction.guild
+        channel_mod_case = await guild.fetch_channel(settings.channel_id.MOD_CASE)
+        channel_mod_log = await guild.fetch_channel(settings.channel_id.MOD_LOG)
+        # コマンド実行日時の取得
+        dt = datetime.now(JP)
+        action_datetime = dt.strftime("%Y/%m/%d %H:%M")
+        # DBへケース情報を保存（本番環境の場合）
+        if settings.ENV == "prod":
+            case_id = await db.save_modlog(moderate_type=4, user_id=member.id, moderator_id=interaction.user.id,
+                                           length="",
+                                           reason="乗っ取りによるスパム行為", datetime=action_datetime, point=0)
+        else:
+            case_id = 9999
+        # DM送信用メッセージの作成
+        dm_embed = discord.Embed(title="キックのお知らせ",
+                                 description="WNH運営チームです。あなたはWNHにてスパム行為を行いましたが、乗っ取りによるものと判断したため、キックします。"
+                                             "\n今後アカウントを取り戻せた場合で再度WNHへの参加を希望する場合は、ご自身で招待URLをお探しの上、ご参加ください。"
+                                             "\nなお、再参加後に再度同様の行為が確認された場合、キックではなく警告・BAN等の処罰を行う場合がございます。"
+                                 )
+
+        dm_embed.add_field(name="ケース番号",
+                           value=f"{case_id}", inline=False)
+        dm_embed.add_field(name="発行日時",
+                           value=f"{action_datetime}", inline=False)
+        dm_embed.add_field(name="この対応に対する質問・ご意見・申立",
+                           value=f"この対応に対する質問・ご意見・申立は下のボタンからのみ受け付けます。", inline=False)
+        # 記録CHへケース情報を送信
+        log = await channel_mod_case.create_thread(name=f"ケース{case_id}",
+                                                   content=f"ユーザー情報：{member.mention}\nモデレーター：<@{interaction.user.id}>"  # noqa
+                                                           f"\n処罰種類：キック\n理由：乗っ取りによるスパム行為")  # noqa
+        # ログCHへ送信するケース情報（Embed）を作成
+        log_embed = discord.Embed(title=f"ケース{case_id} | キック | {member.name}")
+        log_embed.add_field(name="ユーザー",
+                            value=member.mention)
+        log_embed.add_field(name="モデレーター",
+                            value=f"<@{interaction.user.id}>")
+        log_embed.add_field(name="理由",
+                            value=f"乗っ取りによるスパム行為", inline=False)
+        log_embed.add_field(name="記録へのリンク",
+                            value=f"<#{log.thread.id}>", inline=False)  # noqa
+        log_embed.set_footer(text=f"UID：{member.id}・{action_datetime}")
+        # 本番環境のみの処理
+        if settings.ENV == "prod":
+            # ログCHへケース情報を送信
+            await channel_mod_log.send(embed=log_embed)
+            # DBへケースIDと記録スレッドIDを保存
+            await db.update_modlog_id(thread_id=log.thread.id, case_id=case_id)  # noqa
+        # ユーザーがギルドに存在する場合
+        if member in guild.members:
+            # 違反ユーザーのDMへ警告を送信
+            try:
+                await member.send(embed=dm_embed, view=ModContactButton())
+            # 送信できなかった場合、ルールCHにプライベートスレッドを作成して送信
+            except discord.Forbidden:
+                pass
+            await member.kick(reason="乗っ取りによるスパム行為")
+        logger.info(f"{interaction.user.display_name}（UID：{interaction.user.id}）"
+                    f"がフォーム「乗っ取りによるスパマーをキック」を使用し、ユーザー：{member.display_name}（UID：{member.id}）"
+                    f"をキックしました。")
+
 
     async def cog_app_command_error(self, interaction, error):
         """コマンド実行時のエラー処理"""
