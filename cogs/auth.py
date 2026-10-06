@@ -1,3 +1,5 @@
+import datetime
+
 import discord
 from discord import app_commands
 from discord import ui
@@ -113,10 +115,12 @@ class Auth(commands.Cog):
             wows_url = await get_wows_url(account_id, region)
             # 戦闘数の照会と代入
             wg_api_result = await api.wows_user_info(account_id, region)
-            nickname, battles = wg_api_result
+            nickname, created_at, battles = wg_api_result
             # 対象ユーザーのアバターと表示名の取得
             avatar = user.display_avatar.url
             server_name = user.display_name
+            dt = datetime.datetime.fromtimestamp(created_at)
+            created_at = dt.strftime("%Y/%m/%d %H:%M")
             # WGアカウントはあるがPC版WoWSプレイ歴がない場合
             if nickname == "ERROR":
                 embed = discord.Embed(color=COLOR_ERROR)
@@ -139,6 +143,7 @@ class Auth(commands.Cog):
                 embed = discord.Embed(color=COLOR_ERROR)
                 embed.add_field(name="Discordアカウント", value=f"<@{discord_id}>", inline=True)
                 embed.add_field(name="IGN", value=f"{nickname}", inline=True)
+                embed.add_field(name="アカウント作成日", value=f"{created_at}", inline=True)
                 embed.add_field(name="戦闘数", value="非公開", inline=True)
                 embed.add_field(name="サーバー", value=f"{region}", inline=True)
                 embed.set_author(name=f"{server_name}さんのWoWSアカウント情報", url=f"{wows_url}",
@@ -154,6 +159,7 @@ class Auth(commands.Cog):
                 embed = discord.Embed(color=COLOR_OK)
                 embed.add_field(name="Discordアカウント", value=f"<@{discord_id}>", inline=True)
                 embed.add_field(name="IGN", value=f"{nickname}", inline=True)
+                embed.add_field(name="アカウント作成日", value=f"{created_at}", inline=True)
                 embed.add_field(name="戦闘数", value=f"{battles}戦", inline=True)
                 embed.add_field(name="サーバー", value=f"{region}", inline=True)
                 embed.set_author(name=f"{server_name}さんのWoWSアカウント情報", url=f"{wows_url}",
@@ -169,6 +175,7 @@ class Auth(commands.Cog):
                 embed = discord.Embed()
                 embed.add_field(name="Discordアカウント", value=f"<@{discord_id}>", inline=True)
                 embed.add_field(name="IGN", value=f"{nickname}", inline=True)
+                embed.add_field(name="アカウント作成日", value=f"{created_at}", inline=True)
                 embed.add_field(name="戦闘数", value=f"{battles}戦", inline=True)
                 embed.add_field(name="サーバー", value=f"{region}", inline=True)
                 embed.set_author(name=f"{server_name}さんのWoWSアカウント情報", url=f"{wows_url}",

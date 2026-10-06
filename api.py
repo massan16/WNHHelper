@@ -61,7 +61,7 @@ async def wows_user_info(account_id, region):
     """WG APIの呼び出し"""
     url = f"https://api.worldofwarships.{TLD[region]}/wows/account/info/"
     params = {"application_id": settings.WARGAMING_APPLICATION_ID, "account_id": account_id,
-              "fields": "account_id, hidden_profile, nickname, statistics.pvp.battles"}
+              "fields": "account_id, created_at, hidden_profile, nickname, statistics.pvp.battles"}
     res = requests.get(url, params=params)
     data = json.loads(res.text)
     user = data["data"][account_id]
@@ -71,10 +71,11 @@ async def wows_user_info(account_id, region):
         return nickname, battles
     else:
         nickname = data["data"][account_id]["nickname"]
+        created_at = data["data"][account_id]["created_at"]
         private = data["data"][account_id]["hidden_profile"]
         if private is True:
             battles = "private"
-            return nickname, battles
+            return nickname, created_at, battles
         else:
             battles = data["data"][account_id]["statistics"]["pvp"]["battles"]
-            return nickname, battles
+            return nickname, created_at, battles
