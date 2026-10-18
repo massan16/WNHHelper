@@ -172,7 +172,7 @@ async def rule_agree_button_callback(interaction: discord.Interaction, button: u
                 role_list.append(role_authed)
             # 戦闘数の照会と代入
             wg_api_result = await wows_user_info(account_id, region)
-            nickname, battles = wg_api_result
+            nickname, created_at, battles = wg_api_result
             # ロールを変更してボタンに応答
             await member.edit(roles=role_list, reason="ルール同意による（認証履歴あり）")
             response_embed = discord.Embed(title="ルールに同意いただきありがとうございます。",

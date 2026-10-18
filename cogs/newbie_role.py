@@ -64,7 +64,7 @@ class Newbie(commands.Cog):
             else:
                 # 戦闘数の照会と代入
                 wg_api_result = await api.wows_user_info(account_id, region)
-                nickname, battles = wg_api_result
+                nickname, created_at, battles = wg_api_result
                 # 戦闘数が3001以上の場合ロールを解除
                 if battles == "private" or battles > 3000:
                     await mattari_member.remove_roles(role_mattari, reason="定期資格審査による")
@@ -78,7 +78,7 @@ class Newbie(commands.Cog):
             else:
                 # 戦闘数の照会と代入
                 wg_api_result = await api.wows_user_info(account_id, region)
-                nickname, battles = wg_api_result
+                nickname, created_at, battles = wg_api_result
                 # 戦闘数が3001以上の場合ロールを解除
                 if battles == "private" or battles > 3000:
                     await gatsu_member.remove_roles(role_gatsu, reason="定期資格審査による")
@@ -127,7 +127,7 @@ async def role_mattari_callback(interaction: discord.Interaction, button: ui.But
         discord_id, account_id, region = user_info_result
         # 戦闘数の照会と代入
         wg_api_result = await api.wows_user_info(account_id, region)
-        nickname, battles = wg_api_result
+        nickname, created_at, battles = wg_api_result
         # 戦績非公開の場合
         if battles == "private":
             # ボタンへのレスポンス
@@ -176,7 +176,7 @@ async def role_gatsu_callback(interaction: discord.Interaction, button: ui.Butto
         discord_id, account_id, region = user_info_result
         # 戦闘数の照会と代入
         wg_api_result = await api.wows_user_info(account_id, region)
-        nickname, battles = wg_api_result
+        nickname, created_at, battles = wg_api_result
         # 戦績非公開の場合
         if battles == "private":
             # ボタンへのレスポンス
